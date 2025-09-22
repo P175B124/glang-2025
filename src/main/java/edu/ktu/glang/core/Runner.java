@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.*;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public final class Runner {
             throw new IllegalArgumentException("Syntax errors: " + errors);
         }
 
-        new GLangVisitor().visit(tree); // NOTE - evaluate the tree
+        new GLangVisitor(out).visit(tree); // NOTE - evaluate the tree
     }
 }
 
