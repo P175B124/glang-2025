@@ -68,4 +68,20 @@ public class PrintStatementTest {
         String out = Runner.runToString(src);
         assertEquals(expected, out);
     }
+
+    @Test
+    void execute_letThenAssign_printsValue() {
+        String src = """
+            let x;
+            x = 5;
+            print(x);
+            """;
+
+        String expected = """
+            5
+            """;
+
+        String out = Runner.runToString(src);
+        assertEquals(expected, out);
+    }
 }

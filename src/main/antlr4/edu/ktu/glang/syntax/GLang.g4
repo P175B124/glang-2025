@@ -8,7 +8,7 @@ statement
     | printStmt ';'
     ;
 
-letDecl    : LET ID '=' INT ;
+letDecl    : LET ID ( '=' INT )? ;
 assignment : ID '=' INT ;
 printStmt : PRINT '(' (INT | ID) ')' ; //NOTE - or
 
