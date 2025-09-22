@@ -22,18 +22,32 @@ public final class Runner {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         GLangParser parser = new GLangParser(tokens);
 
+        // Collect syntax errors instead of printing to stderr
         SyntaxErrorCollector err = new SyntaxErrorCollector();
-        parser.removeErrorListeners();  // NOTE - remove default
-        parser.addErrorListener(err);   // NOTE - register ours
+        parser.removeErrorListeners();
+        parser.addErrorListener(err);
 
-        ParseTree tree = parser.program(); // NOTE - entry point
+        ParseTree tree = parser.program();
 
         List<String> errors = err.getErrors();
         if (!errors.isEmpty()) {
             throw new IllegalArgumentException("Syntax errors: " + errors);
         }
 
-        new GLangVisitor(out).visit(tree); // NOTE - evaluate the tree
+        new GLangVisitor(out).visit(tree);
+    }
+
+    /** Parse + execute from a raw source string. */
+    public static void run(String source, PrintStream out) {
+        run(CharStreams.fromString(source), out);
+    }
+
+    /** Convenience for tests: returns captured stdout as a String. */
+    public static String runToString(String source) {
+        ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(buf);
+        run(source, ps);
+        return buf.toString().replace("\r\n", "\n"); // normalize newlines on Windows
     }
 }
 
