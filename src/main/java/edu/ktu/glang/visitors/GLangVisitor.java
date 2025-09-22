@@ -4,10 +4,13 @@ import edu.ktu.glang.syntax.GLangBaseVisitor;
 import edu.ktu.glang.syntax.GLangParser;
 
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GLangVisitor extends GLangBaseVisitor<Object> {
 
     private final PrintStream out;
+    private final Map<String, Integer> symbolTable = new HashMap<>();
 
     public GLangVisitor(PrintStream out) {
         this.out = out;
@@ -29,9 +32,22 @@ public class GLangVisitor extends GLangBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitLetDecl(GLangParser.LetDeclContext ctx) {
+        String name = ctx.ID().getText();
+        int value = Integer.parseInt(ctx.INT().getText());
+        symbolTable.put(name, value); // NOTE - we allow re-declaring for now
+        return null;
+    }
+
+    @Override
     public Object visitPrintStmt(GLangParser.PrintStmtContext ctx) {
-        String text = ctx.INT().getText();
-        out.println(text);
+        if (ctx.INT() != null) {
+            out.println(ctx.INT().getText());
+        } else {
+            String name = ctx.ID().getText();
+            Integer v = symbolTable.get(name);
+            out.println(v); // NOTE - we assume the variable was declared
+        }
         return null;
     }
 }
