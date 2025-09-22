@@ -40,6 +40,14 @@ public class GLangVisitor extends GLangBaseVisitor<Object> {
     }
 
     @Override
+    public Object visitAssignment(GLangParser.AssignmentContext ctx) {
+        String name = ctx.ID().getText();
+        int value = Integer.parseInt(ctx.INT().getText());
+        symbolTable.put(name, value); // NOTE - we assume the variable was declared
+        return null;
+    }
+
+    @Override
     public Object visitPrintStmt(GLangParser.PrintStmtContext ctx) {
         if (ctx.INT() != null) {
             out.println(ctx.INT().getText());
