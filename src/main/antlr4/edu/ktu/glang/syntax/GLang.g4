@@ -8,9 +8,14 @@ statement
     | printStmt ';'
     ;
 
-letDecl    : LET ID ( '=' INT )? ;
-assignment : ID '=' INT ;
-printStmt : PRINT '(' (INT | ID) ')' ; //NOTE - or
+letDecl    : LET ID ( '=' expr )? ;
+assignment : ID '=' expr ;
+printStmt  : PRINT '(' expr ')' ;
+
+expr
+    : INT
+    | ID
+    ;
 
 // ---- Lexer ----
 LET    : 'let' ;

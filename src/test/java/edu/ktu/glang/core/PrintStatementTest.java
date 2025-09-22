@@ -40,6 +40,7 @@ public class PrintStatementTest {
         assertEquals(expected, out);
     }
 
+    // NOTE - this should go to another tests class
     @Test
     void execute_letThenPrintVariable_printsValue() {
         String src = """
@@ -94,6 +95,23 @@ public class PrintStatementTest {
 
         String expected = """
             0
+            """;
+
+        String out = Runner.runToString(src);
+        assertEquals(expected, out);
+    }
+
+    // NOTE - this should definitely go to another tests class
+    @Test
+    void execute_variableInitializer_printsValue() {
+        String src = """
+            let x = 1;
+            let y = x;
+            print(y);
+            """;
+
+        String expected = """
+            1
             """;
 
         String out = Runner.runToString(src);
