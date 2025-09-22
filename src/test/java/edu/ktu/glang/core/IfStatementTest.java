@@ -64,5 +64,34 @@ public class IfStatementTest {
         String out = Runner.runToString(src);
         assertEquals(expected, out);
     }
+
+    @Test
+    void execute_nestedIfs_threeVars_selectsThenElseThen_branch() {
+        String src = """
+            let a = 1;
+            let b = 0;
+            let c = 2;
+            if (a)
+                if (b)
+                    if (c)
+                        print(111);
+                    else
+                        print(112);
+                else if (c)
+                        print(121);
+                     else
+                        print(122);
+            """;
+
+        // a=1 (true) -> take THEN
+        //   b=0 (false) -> take ELSE
+        //     c=2 (true) -> take THEN -> print(121)
+        String expected = """
+            121
+            """;
+
+        String out = Runner.runToString(src);
+        assertEquals(expected, out);
+    }
 }
 
