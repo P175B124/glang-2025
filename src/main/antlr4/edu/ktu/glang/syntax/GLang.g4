@@ -4,10 +4,12 @@ program : statement* EOF ;
 
 statement
     : letDecl ';'
+    | assignment ';'
     | printStmt ';'
     ;
 
 letDecl    : LET ID '=' INT ;
+assignment : ID '=' INT ;
 printStmt : PRINT '(' (INT | ID) ')' ; //NOTE - or
 
 // ---- Lexer ----
