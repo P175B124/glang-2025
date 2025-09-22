@@ -39,4 +39,17 @@ public class PrintStatementTest {
         String out = Runner.runToString(src);
         assertEquals(expected, out);
     }
+
+    @Test
+    void execute_letThenPrintVariable_printsValue() {
+        String src = """
+            let x = 42;
+            print(x);
+            """;
+        String expected = """
+            42
+            """;
+        String out = Runner.runToString(src);
+        assertEquals(expected, out);
+    }
 }

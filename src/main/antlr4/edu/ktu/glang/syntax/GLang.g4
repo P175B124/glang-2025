@@ -3,13 +3,18 @@ grammar GLang;
 program : statement* EOF ;
 
 statement
-    : printStmt ';'
+    : letDecl ';'
+    | printStmt ';'
     ;
 
-printStmt : PRINT '(' INT ')' ;
+letDecl    : LET ID '=' INT ;
+printStmt : PRINT '(' (INT | ID) ')' ; //NOTE - or
 
 // ---- Lexer ----
+LET    : 'let' ;
 PRINT  : 'print' ;
+
+ID     : [a-zA-Z_][a-zA-Z_0-9]* ; //NOTE - must be after keywords
 INT    : [0-9]+ ; // NOTE - negative numbers not supported
 
 COMMENT: ( '//' ~[\r\n]* | '/*' .*? '*/' ) -> skip ;
