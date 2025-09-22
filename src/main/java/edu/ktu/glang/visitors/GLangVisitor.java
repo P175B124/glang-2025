@@ -12,8 +12,12 @@ public class GLangVisitor extends GLangBaseVisitor<Object> {
     private final PrintStream out;
     private final Map<String, Integer> symbolTable = new HashMap<>();
 
+    private final IfVisitor ifVisitor; // delegate for if/else
+
     public GLangVisitor(PrintStream out) {
         this.out = out;
+
+        this.ifVisitor = new IfVisitor(this);
     }
 
     @Override
@@ -55,6 +59,11 @@ public class GLangVisitor extends GLangBaseVisitor<Object> {
         int value = (Integer) visit(ctx.expr());
         out.println(value);
         return null;
+    }
+
+    @Override
+    public Object visitIfStmt(GLangParser.IfStmtContext ctx) {
+        return this.ifVisitor.visitIfStmt(ctx); // NOTE - we delegate here
     }
 
     @Override
