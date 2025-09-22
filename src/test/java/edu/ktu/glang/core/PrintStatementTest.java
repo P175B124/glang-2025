@@ -84,4 +84,19 @@ public class PrintStatementTest {
         String out = Runner.runToString(src);
         assertEquals(expected, out);
     }
+
+    @Test
+    void execute_letOnly_printsDefaultValue() {
+        String src = """
+            let x;
+            print(x);
+            """;
+
+        String expected = """
+            0
+            """;
+
+        String out = Runner.runToString(src);
+        assertEquals(expected, out);
+    }
 }

@@ -34,7 +34,10 @@ public class GLangVisitor extends GLangBaseVisitor<Object> {
     @Override
     public Object visitLetDecl(GLangParser.LetDeclContext ctx) {
         String name = ctx.ID().getText();
-        int value = Integer.parseInt(ctx.INT().getText());
+        int value = 0; // NOTE - default if no initializer
+        if (ctx.INT() != null) {
+            value = Integer.parseInt(ctx.INT().getText());
+        }
         symbolTable.put(name, value); // NOTE - we allow re-declaring for now
         return null;
     }
