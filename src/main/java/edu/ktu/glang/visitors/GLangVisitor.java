@@ -35,8 +35,8 @@ public class GLangVisitor extends GLangBaseVisitor<Object> {
     public Object visitLetDecl(GLangParser.LetDeclContext ctx) {
         String name = ctx.ID().getText();
         int value = 0; // NOTE - default if no initializer
-        if (ctx.INT() != null) {
-            value = Integer.parseInt(ctx.INT().getText());
+        if (ctx.expr() != null) {
+            value = (Integer) visit(ctx.expr());
         }
         symbolTable.put(name, value); // NOTE - we allow re-declaring for now
         return null;
@@ -45,20 +45,26 @@ public class GLangVisitor extends GLangBaseVisitor<Object> {
     @Override
     public Object visitAssignment(GLangParser.AssignmentContext ctx) {
         String name = ctx.ID().getText();
-        int value = Integer.parseInt(ctx.INT().getText());
+        int value = (Integer) visit(ctx.expr());
         symbolTable.put(name, value); // NOTE - we assume the variable was declared
         return null;
     }
 
     @Override
     public Object visitPrintStmt(GLangParser.PrintStmtContext ctx) {
+        int value = (Integer) visit(ctx.expr());
+        out.println(value);
+        return null;
+    }
+
+    @Override
+    public Object visitExpr(GLangParser.ExprContext ctx) {
         if (ctx.INT() != null) {
-            out.println(ctx.INT().getText());
+            return Integer.parseInt(ctx.INT().getText());
         } else {
             String name = ctx.ID().getText();
-            Integer v = symbolTable.get(name);
-            out.println(v); // NOTE - we assume the variable was declared
+            return symbolTable.get(name); // NOTE - we assume the variable was declared
         }
-        return null;
+        // NOTE - this method return value, instead of null
     }
 }
