@@ -46,6 +46,12 @@ public class SemanticAnalyzer extends GLangBaseVisitor<Void> {
     }
 
     @Override public Void visitExpr(GLangParser.ExprContext ctx) {
+        if (ctx.ID() != null) {
+            String name = ctx.ID().getText();
+            if (!declared.contains(name)) {
+                error(ctx, "Use of undeclared variable '" + name + "'.");
+            }
+        }
         return null;
     }
 

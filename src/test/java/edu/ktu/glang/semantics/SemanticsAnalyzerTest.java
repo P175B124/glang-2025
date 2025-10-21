@@ -56,4 +56,58 @@ public class SemanticsAnalyzerTest {
         Exception ex = assertThrows(IllegalArgumentException.class, () -> Runner.runToString(src));
         assertTrue(ex.getMessage().contains("Assignment to undeclared variable 'y'"));
     }
+
+    @Test
+    void semantic_printUndeclaredVariable_throwsError() {
+        String src = """
+            print(x);
+            """;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> Runner.runToString(src));
+        assertTrue(ex.getMessage().contains("Use of undeclared variable 'x'"));
+    }
+
+    @Test
+    void semantic_ifConditionUsesUndeclaredVariable_throwsError() {
+        String src = """
+            if (x) print(1);
+            """;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> Runner.runToString(src));
+        assertTrue(ex.getMessage().contains("Use of undeclared variable 'x'"));
+    }
+
+    @Test
+    void semantic_expressionReferencesUndeclaredVariable_throwsError() {
+        String src = """
+            let a = x;
+            print(a);
+            """;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> Runner.runToString(src));
+        assertTrue(ex.getMessage().contains("Use of undeclared variable 'x'"));
+    }
+
+    @Test
+    void semantic_undeclaredVariableInElseBranch_throwsError() {
+        String src = """
+            let a = 1;
+            if (a) print(a); else print(b);
+            """;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> Runner.runToString(src));
+        assertTrue(ex.getMessage().contains("Use of undeclared variable 'b'"));
+    }
+
+    @Test
+    void semantic_declaredAndUndeclaredMix_detectsUndeclaredOnly() {
+        String src = """
+            let a = 10;
+            print(a);
+            print(b);
+            """;
+
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> Runner.runToString(src));
+        assertTrue(ex.getMessage().contains("Use of undeclared variable 'b'"));
+    }
 }
