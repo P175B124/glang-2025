@@ -8,6 +8,7 @@ import java.util.*;
 public class SemanticAnalyzer extends GLangBaseVisitor<Void> {
 
     private final DiagnosticReporter reporter;
+    private final Set<String> declared = new HashSet<>();
 
     public SemanticAnalyzer(DiagnosticReporter reporter) {
         this.reporter = reporter;
@@ -19,6 +20,7 @@ public class SemanticAnalyzer extends GLangBaseVisitor<Void> {
     }
 
     @Override public Void visitLetDecl(GLangParser.LetDeclContext ctx) {
+        declared.add(ctx.ID().getText());
         if (ctx.expr() != null) visit(ctx.expr());
         return null;
     }
