@@ -26,6 +26,9 @@ public class SemanticAnalyzer extends GLangBaseVisitor<Void> {
     }
 
     @Override public Void visitAssignment(GLangParser.AssignmentContext ctx) {
+        if (!declared.contains(ctx.ID().getText())) {
+            error(ctx, "Assignment to undeclared variable '" + ctx.ID().getText() + "'.");
+        }
         visit(ctx.expr());
         return null;
     }
