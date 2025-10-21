@@ -1,5 +1,7 @@
 package edu.ktu.glang.core;
 
+import edu.ktu.glang.semantics.SemanticAnalyzer;
+import edu.ktu.glang.syntax.DiagnosticReporter;
 import edu.ktu.glang.syntax.GLangLexer;
 import edu.ktu.glang.syntax.GLangParser;
 import edu.ktu.glang.syntax.SyntaxErrorCollector;
@@ -32,6 +34,17 @@ public final class Runner {
         List<String> errors = err.getErrors();
         if (!errors.isEmpty()) {
             throw new IllegalArgumentException("Syntax errors: " + errors);
+        }
+
+        var reporter = new DiagnosticReporter();
+        var analyzer = new SemanticAnalyzer(reporter);
+        analyzer.visit(tree);
+
+        if (reporter.hasErrors()) {
+            var msgs = reporter.all().stream()
+                    .map(d -> "%s at %d:%d".formatted(d.message(), d.line(), d.col()))
+                    .toList();
+            throw new IllegalArgumentException("Semantic errors:\n" + String.join("\n", msgs));
         }
 
         new GLangVisitor(out).visit(tree);
