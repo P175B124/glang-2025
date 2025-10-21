@@ -1,6 +1,9 @@
 package edu.ktu.glang.core;
 
-import edu.ktu.glang.semantics.SemanticAnalyzer;
+import edu.ktu.glang.semantics.SemanticContext;
+import edu.ktu.glang.semantics.SemanticEngine;
+import edu.ktu.glang.semantics.rules.AbstractSemanticRule;
+import edu.ktu.glang.semantics.rules.Rule;
 import edu.ktu.glang.syntax.DiagnosticReporter;
 import edu.ktu.glang.syntax.GLangLexer;
 import edu.ktu.glang.syntax.GLangParser;
@@ -37,8 +40,13 @@ public final class Runner {
         }
 
         var reporter = new DiagnosticReporter();
-        var analyzer = new SemanticAnalyzer(reporter);
-        analyzer.visit(tree);
+        var sharedCtx = new SemanticContext(reporter, tokens);
+
+        List<Rule> rules = List.of(
+        );
+
+        var engine = new SemanticEngine(rules, sharedCtx);
+        engine.analyze((GLangParser.ProgramContext) tree, reporter, tokens);
 
         if (reporter.hasErrors()) {
             var msgs = reporter.all().stream()
