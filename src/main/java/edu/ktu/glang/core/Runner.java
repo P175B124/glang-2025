@@ -2,9 +2,9 @@ package edu.ktu.glang.core;
 
 import edu.ktu.glang.semantics.SemanticContext;
 import edu.ktu.glang.semantics.SemanticEngine;
-import edu.ktu.glang.semantics.rules.AbstractSemanticRule;
 import edu.ktu.glang.semantics.rules.Rule;
 import edu.ktu.glang.semantics.rules.UndeclaredAssignRule;
+import edu.ktu.glang.semantics.rules.UndeclaredUseRule;
 import edu.ktu.glang.syntax.DiagnosticReporter;
 import edu.ktu.glang.syntax.GLangLexer;
 import edu.ktu.glang.syntax.GLangParser;
@@ -44,7 +44,8 @@ public final class Runner {
         var sharedCtx = new SemanticContext(reporter, tokens);
 
         List<Rule> rules = List.of(
-                new UndeclaredAssignRule()
+                new UndeclaredAssignRule(),
+                new UndeclaredUseRule()
         );
 
         var engine = new SemanticEngine(rules, sharedCtx);
